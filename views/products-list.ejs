@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách sản phẩm</title>
+    <link rel="stylesheet" href="assets/css/products-list.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+<body>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="logo">
+            <a href="orders-list.html">PO-ZAIKO</a>
+        </div>
+        
+        <div class="menu-btn buttons-group">
+            <ul>
+                <li><a href="order-detail.html?mode=new">Đơn mua hàng</a></li>
+                <li><a id = "products-list" href="products-list.html">DS Sản phẩm</a></li>
+                <li><a id = "product-detail" href="product-detail.html">Nhập liệu SP</a></li>
+                <li><a id="menu-stock" href="stock.html">Tồn kho</a></li>
+            </ul>
+        </div>
+
+        <div class="user-dropdown">
+            <button class="user-btn">User▼</button>
+            <div class="user-dropdown-content">
+                <a href="#">Thay đổi mật khẩu</a>
+                <a href="#" id="logout">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <div class="container">
+        <h1>Danh sách sản phẩm</h1>
+
+        <div class="search">
+            <input type="text" placeholder="Nhập mã hoặc tên sản phẩm" id="search-input">
+            <button id="btn-search">Tìm kiếm</button>
+            <button id="btn-create">Tạo mới</button>
+        </div>
+
+        <table class="products-table" id="products-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã SP</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Đơn vị</th>
+                    <th>Đơn giá</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JS Libraries -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    
+    <script src="assets/data/mock-data.js"></script>
+    <script src="assets/js/products-list.js"></script>
+</body>
+</html>
