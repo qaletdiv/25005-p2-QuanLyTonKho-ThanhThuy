@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="assets/css/product-detail.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+</head>
+<body>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="logo">
+            <a href="orders-list.html">PO-ZAIKO</a>
+        </div>
+        
+        <div class="menu-btn buttons-group">
+            <ul>
+                <li><a href="order-detail.html?mode=new">Đơn mua hàng</a></li>
+                <li><a id = "products-list" href="products-list.html">DS Sản phẩm</a></li>
+                <li><a id = "product-detail" href="product-detail.html">Nhập liệu SP</a></li>
+                <li><a id="menu-stock" href="stock.html">Tồn kho</a></li>
+            </ul>
+        </div>
+
+        <div class="user-dropdown">
+            <button class="user-btn">User▼</button>
+            <div class="user-dropdown-content">
+                <a href="#">Thay đổi mật khẩu</a>
+                <a href="#" id="logout">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Chi tiết sản phẩm</h1>
+
+        <div class="form-group">
+            <label for="item_CD">Mã sản phẩm</label>
+            <input type="text" id="item_CD" placeholder="Nhập mã sản phẩm">
+        </div>
+        <div class="form-group">
+            <label for="item_name">Tên sản phẩm</label>
+            <input type="text" id="item_name" placeholder="Nhập tên sản phẩm">
+        </div>
+        <div class="form-group">
+            <label for="unit">Đơn vị</label>
+            <input type="text" id="unit" placeholder="Nhập đơn vị">
+        </div>
+        <div class="form-group">
+            <label for="price">Đơn giá</label>
+            <input type="number" id="price" placeholder="Nhập đơn giá">
+        </div>
+
+        <button id="saveBtn">Lưu</button>
+        <button id="backBtn">Quay lại</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="assets/data/mock-data.js"></script>
+    <script src="assets/js/product-detail.js"></script>
+</body>
+</html>
