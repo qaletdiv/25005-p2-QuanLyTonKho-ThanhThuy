@@ -7,29 +7,40 @@ exports.getLogin = async (req,res) => {
 
 exports.postLogin = async (req,res) => {
     try{
-        const{userId, password} = req.body;
-        if(!userId || !password){
-            return res.render('login', {error: 'vui long nhap day du thong tin'});
+        const{userId, userPassword} = req.body;
+        if(!userId || !userPassword){
+            return res.json({
+                success: false,
+                message: 'vui lòng nhập user ID,password'
+            });
         }
 
         const user = await User.findOne({where:{userId}});
+
         if(!user){
-            return res.render('login',{error: 'Tai khoan khong ton tai'});
+            return res.json({
+                success: false,
+                message: 'userId hoặc password không đúng'
+            });
         }
-        const isMatch = await bcrypt.compare(password,user.password);
+        const isMatch = await bcrypt.compare(userPassword,user.userPassword);
         if(!isMatch){
-            return res.render('login',{error: 'Mat khau khong chinh xac'});
+            return res.json({
+                success: false,
+                message: 'userId hoặc password không đúng'
+            });
         }
 
         req.session.user = {
             userId: user.userId,
             role: user.role
         };
-        res.redirect('/orders-list');
+
+        return res.json({success: true});
 
     }catch(err){
         console.error(err);
-        res.render('login',{error:'loi he thong'});
+        res.json({success: false, message: 'loi he thong'});
     }
 }
 
