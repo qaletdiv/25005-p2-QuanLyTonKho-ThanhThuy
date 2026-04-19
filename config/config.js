@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
     development: {
         dialect: process.env.DB_DIALECT,

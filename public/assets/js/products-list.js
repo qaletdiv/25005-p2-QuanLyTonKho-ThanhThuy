@@ -81,12 +81,12 @@ $(function(){
     // Click dòng mở chi tiết
     $('#products-table').on('click', 'tbody tr', function(){
         let productCode = $(this).data('product-code');
-        window.location.href = `product-detail.html?productCode=${productCode}`;
+        window.location.href = `/product-detail?productCode=${productCode}`;
     });
 
     // nút tạo mới
     $("#btn-create").on("click", function () {
-    window.location.href = "product-detail.html";
+    window.location.href = "/product-detail";
     });
 
     $("#menu-stock").on("click", function (e) {
@@ -103,14 +103,14 @@ $(function(){
         }
 
         // Nếu có dữ liệu thì chuyển đến màn hình stock.html
-        window.location.href = "stock.html";
+        window.location.href = "/stock";
     });
     
     $('#products-list').on('click',function(){
-        window.location.href = "products-list.html";
+        window.location.href = "/products-list";
     });
     $('#product-detail').on('click',function(){
-        window.location.href = "product-detail.html";
+        window.location.href = "/product-detail";
     });
 
     $(".user-btn").click(function(event){
@@ -122,7 +122,7 @@ $(function(){
     $("#logout").click(function (e) {
         e.preventDefault();   
         localStorage.setItem('isLogined','false');
-        window.location.href = "login.html"; 
+        window.location.href = "/login"; 
     });
     
 

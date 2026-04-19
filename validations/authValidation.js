@@ -1,7 +1,7 @@
 const {body} = require('express-validator');
 
 exports.loginValidation = [
-    body('userID')
+    body('userId')
     .notEmpty().withMessage('User ID không được để trống')
     .isLength({min:3}).withMessage('UserID phải có ít nhất 3 ký tự'),
 

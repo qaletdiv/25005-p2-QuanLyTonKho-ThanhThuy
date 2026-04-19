@@ -4,35 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sản phẩm</title>
-    <link rel="stylesheet" href="assets/css/product-detail.css">
+    <link rel="stylesheet" href="/assets/css/product-detail.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
-    <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
 </head>
+
 <body>
-
     <!-- Topbar -->
-    <div class="topbar">
-        <div class="logo">
-            <a href="orders-list.html">PO-ZAIKO</a>
-        </div>
-        
-        <div class="menu-btn buttons-group">
-            <ul>
-                <li><a href="order-detail.html?mode=new">Đơn mua hàng</a></li>
-                <li><a id = "products-list" href="products-list.html">DS Sản phẩm</a></li>
-                <li><a id = "product-detail" href="product-detail.html">Nhập liệu SP</a></li>
-                <li><a id="menu-stock" href="stock.html">Tồn kho</a></li>
-            </ul>
-        </div>
-
-        <div class="user-dropdown">
-            <button class="user-btn">User▼</button>
-            <div class="user-dropdown-content">
-                <a href="#">Thay đổi mật khẩu</a>
-                <a href="#" id="logout">Đăng xuất</a>
-            </div>
-        </div>
-    </div>
+     <%- include('partials/topbar',{user:user}) %>
 
     <div class="container">
         <h1>Chi tiết sản phẩm</h1>
@@ -59,7 +38,6 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="assets/data/mock-data.js"></script>
-    <script src="assets/js/product-detail.js"></script>
+    <script src="/assets/js/product-detail.js"></script>
 </body>
 </html>
