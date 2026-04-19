@@ -99,7 +99,7 @@ $(function(){
     // Menu chuyển hướng
     $("#menu-order").on("click", function(e){
         e.preventDefault();
-        window.location.href = "order-detail.html?mode=new";
+        window.location.href = "/order-detail?mode=new";
     });
 
     $("#menu-stock").on("click", function (e) {
@@ -116,14 +116,14 @@ $(function(){
         }
 
         // Nếu có dữ liệu thì chuyển đến màn hình stock.html
-        window.location.href = "stock.html";
+        window.location.href = "/stock";
     });
     
     $('#products-list').on('click',function(){
-        window.location.href = "products-list.html";
+        window.location.href = "/products-list";
     });
     $('#product-detail').on('click',function(){
-        window.location.href = "product-detail.html";
+        window.location.href = "/product-detail";
     });
 
     
@@ -131,7 +131,7 @@ $(function(){
     $("#logout").click(function (e) {
         e.preventDefault();   
         localStorage.setItem('isLogined','false');
-        window.location.href = "login.html"; 
+        window.location.href = "/login"; 
     });
     
 

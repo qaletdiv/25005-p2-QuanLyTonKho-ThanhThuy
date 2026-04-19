@@ -1,0 +1,23 @@
+<!-- Topbar -->
+<div class="topbar">
+    <div class="logo">
+        <a href="/orders-list">PO-ZAIKO</a>
+    </div>
+    
+    <div class="menu-btn buttons-group">
+        <ul>
+            <li><a href="/order-detail?mode=new">Đơn mua hàng</a></li>
+            <li><a href="/products-list">DS Sản phẩm</a></li>
+            <li><a href="/product-detail">Nhập liệu SP</a></li>
+            <li><a href="/stock">Tồn kho</a></li>
+        </ul>
+    </div>
+
+    <div class="user-dropdown">
+        <button class="user-btn"><%= user.full_name %>▼</button>
+        <div class="user-dropdown-content">
+            <a href="#">Thay đổi mật khẩu</a>
+            <a href="/logout" id="logout">Đăng xuất</a>
+        </div>
+    </div>
+</div>
