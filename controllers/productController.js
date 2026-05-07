@@ -15,8 +15,8 @@ exports.getAllProducts = async (req, res) => {
         }
         const products = await Product.findAll({ where });
         const data = products.map(p => ({
-            item_CD: p.itemCode,
-            item_name: p.itemName,
+            itemCode: p.itemCode,
+            itemName: p.itemName,
             unit: p.unit,
             price: p.price
         }));
@@ -37,8 +37,8 @@ exports.getProductDetail = async (req, res) => {
         res.json({
             success: true,
             data: {
-                item_CD: product.itemCode,
-                item_name: product.itemName,
+                itemCode: product.itemCode,
+                itemName: product.itemName,
                 unit: product.unit,
                 price: product.price
             }
@@ -51,12 +51,12 @@ exports.getProductDetail = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
     try {
-        const { item_CD, item_name, unit, price } = req.body;
-        const exists = await Product.findOne({ where: { itemCode: item_CD } });
+        const { itemCode, itemName, unit, price } = req.body;
+        const exists = await Product.findOne({ where: { itemCode } });
         if (exists) {
             return res.status(400).json({ success: false, message: 'Mã sản phẩm đã tồn tại' });
         }
-        await Product.create({ itemCode: item_CD, itemName: item_name, unit, price });
+        await Product.create({ itemCode, itemName, unit, price });
         res.json({ success: true, message: 'Tạo sản phẩm thành công' });
     } catch (err) {
         console.error(err);
@@ -67,12 +67,12 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const { itemCode } = req.params;
-        const { item_name, unit, price } = req.body;
+        const { itemName, unit, price } = req.body;
         const product = await Product.findOne({ where: { itemCode } });
         if (!product) {
             return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm' });
         }
-        await product.update({ itemName: item_name, unit, price });
+        await product.update({ itemName, unit, price });
         res.json({ success: true, message: 'Cập nhật sản phẩm thành công' });
     } catch (err) {
         console.error(err);
