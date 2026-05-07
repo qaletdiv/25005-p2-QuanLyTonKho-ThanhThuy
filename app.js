@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const orderRoutes = require('./routes/order');
 const productRoutes = require('./routes/product');
 const stockRoutes = require('./routes/stock');
+const vendorRoutes = require('./routes/vendor');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +27,7 @@ app.use('/', authRoutes);
 app.use('/', orderRoutes);
 app.use('/', productRoutes);
 app.use('/', stockRoutes);
+app.use('/', vendorRoutes);
 app.get('/', (req, res) => {
     res.redirect('/login');
 });

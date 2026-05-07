@@ -1,3 +1,12 @@
+function fetchProductsForSearch(callback) {
+    fetch('/api/products')
+        .then(res => res.json())
+        .then(result => {
+            products = result.data || [];
+            callback(products);
+        });
+}
+
 $(function() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -19,36 +28,35 @@ $(function() {
         }
 
         table = $('#PO-table').DataTable({
-            data:data,
-            columns:[
-                {data: null, title: '', defaultContent: '',className: "dt-center", render: function (data) { return editable ? `<input type="checkbox" class="row-check">`: ''; } },
-                {data:null,title:'STT',className: "dt-center",render:function(data,type,row,meta){ return meta.row + 1;}},
-                {data:'item_CD',title:'Mã SP',className: "dt-center",render:function(data){return editable?`<input class='edit-input item_CD' value="${data || ''}">` : data;}},
-                {data:'item_name',title:'Tên SP',className: "dt-center",render:function(data){return editable?`<input class='edit-input item_name' value="${data || ''}">` : data;}},
-                {data:'quantity',title:'Số lượng',className: "dt-center",render:function(data){return editable?`<input type="number" class='edit-input quantity' value="${data || ''}">` : data;}},
-                {data:'price',title:'Đơn giá',className: "dt-center",render:function(data){return editable?`<input type="number" class='edit-input price' value="${data || ''}">` : data;}},
-                {data:null,title:'Thành tiền',className: "dt-center",render:function(data,type,row){return (row.quantity * row.price) || '';}},
+            data: data,
+            columns: [
+                { data: null, title: '', defaultContent: '', className: "dt-center", render: function (data) { return editable ? `<input type="checkbox" class="row-check">` : ''; } },
+                { data: null, title: 'STT', className: "dt-center", render: function (data, type, row, meta) { return meta.row + 1; } },
+                { data: 'itemCode', title: 'Mã SP', className: "dt-center", render: function (data) { return editable ? `<input class='edit-input itemCode' value="${data || ''}">` : data; } },
+                { data: 'itemName', title: 'Tên SP', className: "dt-center", render: function (data) { return editable ? `<input class='edit-input itemName' value="${data || ''}">` : data; } },
+                { data: 'quantity', title: 'Số lượng', className: "dt-center", render: function (data) { return editable ? `<input type="number" class='edit-input quantity' value="${data || ''}">` : data; } },
+                { data: 'unitPrice', title: 'Đơn giá', className: "dt-center", render: function (data) { return editable ? `<input type="number" class='edit-input unitPrice' value="${data || ''}">` : data; } },
+                { data: null, title: 'Thành tiền', className: "dt-center", render: function (data, type, row) { return (row.quantity * row.unitPrice) || ''; } },
             ],
-            searching:false,
+            searching: false,
             language: {
                 decimal: "",
                 emptyTable: "Không có dữ liệu trong bảng",
                 info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
                 infoEmpty: "Hiển thị 0 đến 0 của 0 dòng",
                 lengthMenu: "Hiển thị _MENU_ dòng",
-                loadingRecords:"Đang tải...",
+                loadingRecords: "Đang tải...",
                 zeroRecords: "Không tìm thấy dữ liệu phù hợp",
                 paginate: {
-                    first:"Đầu tiên",
-                    last:"Cuối cùng",
-                    next:"Sau",
-                    previous:"Trước"
+                    first: "Đầu tiên",
+                    last: "Cuối cùng",
+                    next: "Sau",
+                    previous: "Trước"
                 }
             }
-            
         });
-        table.on('draw.dt',function(){
-            table.column(1,{search:'applied',order:'applied'}).nodes().each(function(cell,i){cell.innerHTML=i+1});
+        table.on('draw.dt', function () {
+            table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) { cell.innerHTML = i + 1 });
         });
     }
 
@@ -58,23 +66,11 @@ $(function() {
         currentEditingRow=$(this).closest('tr');
     });
 
-
-
-    // Fetch Products 
-    function fetchProductsForSearch(cb) {
-        fetch('/api/products')
-            .then(res => res.json())
-            .then(result => {
-                products = result.data || [];
-                cb(products);
-            });
-    }
-
     searchTable = $('#searchProductTable').DataTable({
         data: [],
         columns: [
             { data: null, title: 'STT', render: function (data, type, row, meta) { return meta.row + 1; } },
-            { data: 'item_name', title: 'Tên sản phẩm' },
+            { data: 'itemName', title: 'Tên sản phẩm' },
             { data: 'unit', title: 'Đơn vị' },
             { data: 'price', title: 'Đơn giá' }
         ],
@@ -140,28 +136,27 @@ $(function() {
             let searchedData = (keyword === "")
                 ? productsData
                 : productsData.filter(p =>
-                    p.item_CD.toLowerCase().includes(keyword) ||
-                    p.item_name.toLowerCase().includes(keyword)
+                    p.itemCode.toLowerCase().includes(keyword) ||
+                    p.itemName.toLowerCase().includes(keyword)
                 );
             searchTable.clear().rows.add(searchedData).draw();
         });
-
     });
 
     // chọn sản phẩm trong popup xong thì tự động hiển thị trong bảng chi tiết
     $('#searchProductTable').on('dblclick','tbody tr',function(){
         let data = searchTable.row(this).data();
         if(!currentEditingRow)return;
-        currentEditingRow.find('.item_CD').val(data.item_CD);
-        currentEditingRow.find('.item_name').val(data.item_name);
-        currentEditingRow.find('.price').val(data.price);
+        currentEditingRow.find('.itemCode').val(data.itemCode);
+        currentEditingRow.find('.itemName').val(data.itemName);
+        currentEditingRow.find('.unitPrice').val(data.price);
         $('.search-table').fadeOut();
     })
 
     // hàm tính lại tổng tiền
     function calculateTotalAmount(displayProducts) {
         return displayProducts.reduce((sum, p) => {
-        return sum + (p.quantity * p.price);
+        return sum + ((p.quantity || 0) * (p.unitPrice || 0));
         }, 0);
     }
 
@@ -170,7 +165,7 @@ $(function() {
         let total = 0;
         $('#PO-table tbody tr').each(function() {
             let quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            let price = parseFloat($(this).find('.price').val()) || 0;
+            let price = parseFloat($(this).find('.unitPrice').val()) || 0;
             total += (quantity * price);
         });
         $("input[name='net1']").val(total.toLocaleString());
@@ -180,18 +175,20 @@ $(function() {
     function updateOrderData (){
         let updatedProducts = [];
         $('#PO-table tbody tr').each(function () {
+            const itemCode = $(this).find('.itemCode').val()?.trim();
+            if (!itemCode) return; 
             updatedProducts.push({
-            item_CD: $(this).find('.item_CD').val() || "",
-            item_name: $(this).find('.item_name').val() || "",
-            quantity: parseFloat($(this).find('.quantity').val()) || 0,
-            price: parseFloat($(this).find('.price').val()) || 0
+                itemCode,
+                itemName: $(this).find('.itemName').val() || "",
+                quantity: parseFloat($(this).find('.quantity').val()) || 0,
+                unitPrice: parseFloat($(this).find('.unitPrice').val()) || 0
+            });
         });
-    });
 
-    if(order){
-        order.orderProducts = updatedProducts;
-        order.totalAmount = parseFloat($("input[name='net1']").val().replace(/,/g, '')) || 0;
-    }
+        if(order){
+            order.orderProducts = updatedProducts;
+            order.totalAmount = parseFloat($("input[name='net1']").val().replace(/,/g, '')) || 0;
+        }
     }
 
     // hàm lấy thông tin sp từ bảng từ DOM
@@ -199,11 +196,11 @@ $(function() {
         const products = [];
 
         $('#PO-table tbody tr').each(function () {
-            const item_CD = $(this).find('.item_CD').val()?.trim();
+            const itemCode = $(this).find('.itemCode').val()?.trim();
+            if (!itemCode) return; 
             const quantity = parseFloat($(this).find('.quantity').val()) || 0;
-            if (!item_CD) return; 
             products.push({
-                item_CD,
+                itemCode,
                 quantity,
             });
         });
@@ -215,12 +212,12 @@ $(function() {
 
     function getProductInfo(orderProducts) {
         return orderProducts.map(o => {
-            const sp = products.find(p => p.item_CD === o.item_CD);
+            const sp = products.find(p => p.itemCode === o.itemCode);
             return {
-                item_CD: o.item_CD,
-                item_name: sp ? sp.item_name : "",
+                itemCode: o.itemCode,
+                itemName: sp ? sp.itemName : "",
                 quantity: o.quantity || 0,
-                price: sp ? sp.price : 0
+                unitPrice: sp ? sp.price : 0
             }
         });
     }
@@ -241,32 +238,6 @@ $(function() {
             .prop('disabled', true);
     }
 
-    // kiểm tra order, hiển thị dữ liệu khi mở trang ra
-    // if (order) {
-    //     $("#PO-person").val(order.handler);
-    //     $("#PO-date").val(order.orderDate);
-    //     $("#vendor").val(order.vendorName);
-    //     $("input[name='net1']").val(order.totalAmount);
-        
-    //     // nếu trạng thái là bản nháp thì thêm html input và chỉnh sửa dc, và hiển thị 3 nút thêm xóa dòng và nút lưu lại
-        
-    //     if(order.status==="Bản nháp"){
-    //         const displayProducts = getProductInfo(order.orderProducts);
-    //         render(displayProducts,true);
-    //         const total = calculateTotalAmount(displayProducts);
-    //         $("input[name='net1']").val(total.toLocaleString());
-    //         $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').show();
-    //         $('#confirmStockBtn').hide();
-    //     }else if(order.status==="Đã xác nhận") {
-    //         render(order.orderProducts,false);
-    //         $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').hide();
-    //         lockInputs();
-    //     }else if(order.status==="Đã nhập kho"){
-    //         render(order.orderProducts,false);
-    //         $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn,#confirmStockBtn').hide();
-    //         lockInputs();
-    //     }
-    // }
         // Load order detail khi mở trang
     function loadOrderDetail() {
         if (!orderNo) {
@@ -277,9 +248,9 @@ $(function() {
             $("input[name='net1']").val('');
             $("textarea[name='note1']").val('');
             const blankRows = [
-                { item_CD: '', item_name: '', quantity: '', price: '' },
-                { item_CD: '', item_name: '', quantity: '', price: '' },
-                { item_CD: '', item_name: '', quantity: '', price: '' }
+                { itemCode: '', itemName: '', quantity: '', unitPrice: '' },
+                { itemCode: '', itemName: '', quantity: '', unitPrice: '' },
+                { itemCode: '', itemName: '', quantity: '', unitPrice: '' }
             ];
             render(blankRows, true);
             $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').show();
@@ -288,22 +259,31 @@ $(function() {
         fetch(`/api/orders/${orderNo}`)
             .then(res => res.json())
             .then(result => {
+                if (!result.success || !result.data) return;
                 order = result.data;
-                if (!order) return;
                 $("#PO-person").val(order.handler);
-                $("#PO-date").val(order.orderDate);
+                // Format ngày từ YYYY-MM-DD sang DD/MM/YYYY
+                if (order.orderDate) {
+                    const parts = order.orderDate.split('-');
+                    if (parts.length === 3) {
+                        $("#PO-date").val(parts[2] + '/' + parts[1] + '/' + parts[0]);
+                    } else {
+                        $("#PO-date").val(order.orderDate);
+                    }
+                }
                 $("#vendor").val(order.vendorName);
-                $("input[name='net1']").val(order.totalAmount);
+                $("input[name='net1']").val(Number(order.totalAmount).toLocaleString());
+                $("textarea[name='note1']").val(order.note || '');
                 if (order.status === "Bản nháp") {
-                    const displayProducts = getProductInfo(order.orderProducts);
-                    render(displayProducts, true);
-                    const total = calculateTotalAmount(displayProducts);
+                    render(order.orderProducts, true);
+                    const total = calculateTotalAmount(order.orderProducts);
                     $("input[name='net1']").val(total.toLocaleString());
                     $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').show();
                     $('#confirmStockBtn').hide();
                 } else if (order.status === "Đã xác nhận") {
                     render(order.orderProducts, false);
                     $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').hide();
+                    $('#confirmStockBtn').show();
                     lockInputs();
                 } else if (order.status === "Đã nhập kho") {
                     render(order.orderProducts, false);
@@ -313,8 +293,25 @@ $(function() {
             });
     }
 
+    // hàm load danh sách nhà cung cấp vào dropdown
+    function loadVendors() {
+        fetch('/api/vendors')
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    const select = $('#vendor');
+                    select.find('option:not(:first)').remove();
+                    result.data.forEach(v => {
+                        select.append(`<option value="${v.vendorName}">${v.vendorName}</option>`);
+                    });
+                }
+            });
+    }
+
+    loadVendors();
+
     fetchProductsForSearch(function (data) {
-        products = data;
+        //products = data;
         loadOrderDetail();
     });
 
@@ -329,9 +326,9 @@ $(function() {
         $("textarea[name='note1']").val('');
 
         const blankRows = [
-        { item_CD: '', item_name: '', quantity: '', price: '' },
-        { item_CD: '', item_name: '', quantity: '', price: '' },
-        { item_CD: '', item_name: '', quantity: '', price: '' }
+        { itemCode: '', itemName: '', quantity: 0, unitPrice: 0 },
+        { itemCode: '', itemName: '', quantity: 0, unitPrice: 0 },
+        { itemCode: '', itemName: '', quantity: 0, unitPrice: 0 }
         ];
 
         render(blankRows,true);
@@ -350,9 +347,9 @@ $(function() {
         $("textarea[name='note1']").val('');
 
         const blankRows = [
-        { item_CD: '', item_name: '', quantity: '', price: '' },
-        { item_CD: '', item_name: '', quantity: '', price: '' },
-        { item_CD: '', item_name: '', quantity: '', price: '' }
+        { itemCode: '', itemName: '', quantity: 0, unitPrice: 0 },
+        { itemCode: '', itemName: '', quantity: 0, unitPrice: 0 },
+        { itemCode: '', itemName: '', quantity: 0, unitPrice: 0 }
         ];
 
         render(blankRows,true);
@@ -365,7 +362,7 @@ $(function() {
     $("#PO-table").on('input','.edit-input',function(){
         let $tr = $(this).closest('tr');
         let quantity = parseFloat($tr.find('.quantity').val()) || 0;
-        let price = parseFloat($tr.find('.price').val()) || 0;
+        let price = parseFloat($tr.find('.unitPrice').val()) || 0;
 
     // tính lại thành tiền của dòng
         let rowTotal = quantity * price;
@@ -379,10 +376,10 @@ $(function() {
     
     $('#addRow').on('click', function() {
         table.row.add({
-            item_CD: '',
-            item_name: '',
-            quantity: '',
-            price: ''
+            itemCode: '',
+            itemName: '',
+            quantity: 0,
+            unitPrice: 0
         }).draw(false);
         updateTotalAmount();
         updateOrderData();
@@ -420,7 +417,7 @@ $(function() {
         let handler = $('#PO-person').val().trim();
 
         if (!vendorName) {
-            alert('Vui lòng nhập tên nhà cung cấp.');
+            alert('Vui lòng chọn nhà cung cấp.');
             $('#vendor').focus();
             return;
         }
@@ -435,12 +432,20 @@ $(function() {
             return;
         }
 
+        // chuyen dinh dang DD/MM/YYYY sang YYYY-MM-DD
+        let orderDate_ = orderDate;
+        const dateParts = orderDate.split('/');
+        if (dateParts.length === 3) {
+            orderDate_ = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+        }
+
         const orderData = {
             vendorName: vendorName,
-            orderDate: orderDate,
+            orderDate: orderDate_,
             handler: handler,
             totalAmount: parseFloat($("input[name='net1']").val().replace(/,/g, '')) || 0,
             status: "Bản nháp",
+            note: $("textarea[name='note1']").val() || '',
             orderProducts: getOrderProductsFromTable()
         };
 
@@ -514,58 +519,6 @@ $(function() {
         }
     });
 
-// xử lý khi ấn nút đã nhập kho
-//     $('#confirmStockBtn').on('click', function () {
-
-//     // LẤY DỮ LIỆU TỪ BẢNG
-//     const products = table.rows().data().toArray();
-
-//     if (!products || products.length === 0) {
-//         alert("Không có sản phẩm để nhập kho");
-//         return;
-//     }
-
-//     let stockData = JSON.parse(localStorage.getItem("stockData")) || [];
-
-//     products.forEach(p => {
-//         if (!p.item_CD || p.quantity <= 0) return; 
-//         let prod = stockData.find(x => x.item_CD === p.item_CD);
-
-//         if (prod) {
-//             prod.stock += Number(p.quantity);
-//         } else {
-//             stockData.push({
-//                 item_CD: p.item_CD,
-//                 item_name: p.item_name,
-//                 stock: Number(p.quantity)
-//             });
-//         }
-//     });
-
-//     localStorage.setItem("stockData", JSON.stringify(stockData));
-//     // CHỐT dữ liệu sản phẩm ,ko lấy lại từ master nữa
-//     order.orderProducts = table.rows().data().toArray().map(p => ({
-//         item_CD: p.item_CD,
-//         item_name: p.item_name,
-//         quantity: p.quantity,
-//         price: p.price
-//     }));
-
-//     // cập nhật trạng thái đơn
-//     order.status = "Đã nhập kho";
-
-//     let orders = JSON.parse(localStorage.getItem("orders")) || [];
-//     let index = orders.findIndex(o => o.orderNo === order.orderNo);
-//     if (index !== -1) orders[index] = order;
-
-//     localStorage.setItem("orders", JSON.stringify(orders));
-
-//     alert(`Đơn hàng ${order.orderNo} đã được nhập kho`);
-
-//     $('#PO-table input').prop('disabled', true);
-//     $('#addRow, #deleteRow, #saveBtn, #confirmStockBtn').hide();
-// });
-
     // Xác nhận nhập kho
     $('#confirmStockBtn').on('click', async function () {
         const products = table.rows().data().toArray();
@@ -615,18 +568,6 @@ $(function() {
 
     $("#menu-stock").on("click", function (e) {
         e.preventDefault();
-        if(!localStorage.getItem("stockData")){
-            localStorage.setItem("stockData",JSON.stringify(stockData));
-        }
-
-        const stock = JSON.parse(localStorage.getItem("stockData")); 
-
-        if (!stock || stock.length === 0) {
-            alert("Tồn kho không có dữ liệu!");
-            return;
-        }
-
-        // Nếu có dữ liệu thì chuyển đến màn hình stock
         window.location.href = "/stock";
     });
     

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Nhà cung cấp</title>
+    <link rel="stylesheet" href="/assets/css/products-list.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
+</head>
+<body>
+    <%- include('partials/topbar',{user:user}) %>
+
+    <div class="container">
+        <h1>Danh sách Nhà cung cấp</h1>
+
+        <div class="search">
+            <input type="text" placeholder="Nhập tên hoặc địa chỉ NCC" id="search-input">
+            <button id="btn-search">Tìm kiếm</button>
+            <button id="btn-create">Tạo mới</button>
+        </div>
+
+        <table class="products-table" id="vendors-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên nhà cung cấp</th>
+                    <th>Địa chỉ</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <script src="/assets/js/vendors-list.js"></script>
+</body>
+</html>

@@ -9,12 +9,4 @@ router.get('/login', getLogin);
 router.post('/login', loginValidation, validateMiddleware, postLogin);
 router.get('/logout', logout);
 
-router.get('/orders-list', isAuthenticated, (req, res) => {
-    res.render('orders-list', { user: req.session.user });
-});
-
-router.get('/order-detail', isAuthenticated, (req, res) => {
-    res.render('order-detail', { user: req.session.user });
-});
-
 module.exports = router;

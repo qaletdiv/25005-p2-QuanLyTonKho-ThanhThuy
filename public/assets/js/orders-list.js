@@ -56,6 +56,7 @@ $(function(){
         fetch(url)
             .then(res => res.json())
             .then(result => {
+                console.log(result);
                 render(result.data || []);
             })
             .catch(() => {
@@ -74,17 +75,8 @@ $(function(){
 
     // Nút tìm kiếm
     $("#btn-search").on("click", function(){
-        let keyword = $("#search-input").val().trim().toLowerCase();
-        let url = `/orders-list/search?orderNo=${encodeURIComponent(keyword)}&vendorName=${encodeURIComponent(keyword)}`;
-        fetch(url)
-        .then(res => res.json())
-        .then(result => {
-            render(result.data)
-        })
-        //let filtered = ordersData.filter(o =>
-            //o.orderNo.toLowerCase().includes(keyword) || o.vendorName.toLowerCase().includes(keyword)
-        //);
-        //render(filtered);
+        let keyword = $("#search-input").val().trim();
+        fetchOrders(keyword);
     });
 
 
@@ -130,8 +122,7 @@ $(function(){
 
     //logout
     $("#logout").click(function (e) {
-        e.preventDefault();   
-        localStorage.setItem('isLogined','false');
+        e.preventDefault();
         window.location.href = "/login"; 
     });
 

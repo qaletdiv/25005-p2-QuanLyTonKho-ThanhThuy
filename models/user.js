@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
                 unique: true,
                 validate: {
                     notEmpty: true,
-                    len: [3, 50]
+                    len: [2, 50]
                 }
             },
 
@@ -43,8 +43,8 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'User',
             tableName: 'users',
-            timestamps: true,
-            underscored: true,
+            timestamps: false,
+            //underscored: true,
 
             hooks: {
                 beforeCreate: async (user) => {
