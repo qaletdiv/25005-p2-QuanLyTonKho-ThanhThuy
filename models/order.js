@@ -27,11 +27,6 @@ module.exports = (sequelize, DataTypes) => {
                 field: 'orderDate'
             },
             handler: DataTypes.STRING,
-            totalAmount: {
-                type: DataTypes.DECIMAL(12, 2),
-                defaultValue: 0,
-                field: 'totalAmount'
-            },
             status: {
                 type: DataTypes.ENUM('Bản nháp', 'Đã xác nhận', 'Đã nhập kho'),
                 defaultValue: 'Bản nháp'

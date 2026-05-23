@@ -9,13 +9,13 @@ $(function(){
             data: data,
             columns: [
                 { data: null, title: 'STT', render: function(data,type,row,meta){ return meta.row + 1; } },
-                { data: 'item_CD', title: 'Mã SP' },
-                { data: 'item_name', title: 'Tên sản phẩm' },
+                { data: 'itemCode', title: 'Mã SP' },
+                { data: 'itemName', title: 'Tên sản phẩm' },
                 { data: 'unit', title: 'Đơn vị' },
                 { data: 'price', title: 'Đơn giá', render: function(data){ return Number(data).toLocaleString(); } }
             ],
             createdRow: function(row, rowData){
-                $(row).attr('data-product-code', rowData.item_CD);
+                $(row).attr('data-product-code', rowData.itemCode);
             },
             searching: false,
             language: {
@@ -67,5 +67,5 @@ $(function(){
     $(".toggle-btn").click(function(){ $(".sidebar-wrap").slideToggle(300); });
     $(".user-btn").click(function(event){ event.stopPropagation(); $(".user-dropdown-content").toggle(); });
     $(document).click(function(){ $(".user-dropdown-content").hide(); });
-    $("#logout").click(function(e){ e.preventDefault(); window.location.href = "/login"; });
+    $("#logout").click(function(e){ e.preventDefault(); fetch('/logout').then(()=>window.location.href='/login'); });
 });

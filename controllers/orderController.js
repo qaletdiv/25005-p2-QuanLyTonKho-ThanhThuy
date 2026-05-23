@@ -5,7 +5,10 @@ exports.getAllOrders = async (req, res) => {
     try {
         const { search } = req.query;
         let where = {};
-        let includeOpts = [{ model: Vendor, as: 'vendor' }];
+        let includeOpts = [
+            { model: Vendor, as: 'vendor' },
+            { model: OrderProduct, as: 'orderProducts' }
+        ];
 
         if (search) {
             where = {
@@ -23,7 +26,7 @@ exports.getAllOrders = async (req, res) => {
             vendorName: o.vendor ? o.vendor.vendorName : '', 
             orderDate: o.orderDate,
             handler: o.handler,
-            totalAmount: o.totalAmount || 0, 
+            totalAmount: o.orderProducts ? o.orderProducts.reduce((sum, op) => sum + (op.quantity * op.unitPrice), 0) : 0,
             status: o.status
         }));
 
@@ -96,7 +99,7 @@ exports.getOrderDetail = async (req, res) => {
                 vendorName: order.vendor ? order.vendor.vendorName : '',
                 orderDate: order.orderDate,
                 handler: order.handler,
-                totalAmount: order.totalAmount || 0,
+                totalAmount: order.orderProducts ? order.orderProducts.reduce((sum, op) => sum + (op.quantity * op.unitPrice), 0) : 0,
                 status: order.status,
                 orderProducts
             }
@@ -124,23 +127,13 @@ exports.createOrder = async (req, res) => {
         const nextNum = lastOrder ? lastOrder.id + 1 : 1;
         const orderNo = 'PO' + String(nextNum).padStart(3, '0');
 
-        // Tính tổng tiền
-        let totalAmount = 0;
-        for (const op of orderProducts) {
-            const product = await Product.findOne({ where: { itemCode: op.itemCode } });
-            if (product) {
-                totalAmount += op.quantity * product.price;
-            }
-        }
-
         const order = await Order.create({
-            orderNo, 
-            vendorId: vendor.id, 
-            orderDate, 
-            handler, 
-            status: status || 'Bản nháp', 
-            note, 
-            totalAmount
+            orderNo,
+            vendorId: vendor.id,
+            orderDate,
+            handler,
+            status: status || 'Bản nháp',
+            note
         });
 
         for (const op of orderProducts) {
@@ -178,16 +171,7 @@ exports.updateOrder = async (req, res) => {
         }
             
 
-        // Tính tổng tiền
-        let totalAmount = 0;
-        for (const op of orderProducts) {
-            const product = await Product.findOne({ where: { itemCode: op.itemCode } });
-            if (product) {
-                totalAmount += op.quantity * product.price;
-            }
-        }
-
-        await order.update({ vendorId: vendor.id, orderDate, handler, note, totalAmount });
+        await order.update({ vendorId: vendor.id, orderDate, handler, note });
 
         // Xóa orderProducts cũ, tạo mới
         await OrderProduct.destroy({ where: { orderId: order.id } });

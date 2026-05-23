@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách Nhà cung cấp</title>
-    <link rel="stylesheet" href="/assets/css/products-list.css">
+    <link rel="stylesheet" href="/assets/css/orders-list.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
     <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
 </head>
@@ -20,16 +20,18 @@
             <button id="btn-create">Tạo mới</button>
         </div>
 
-        <table class="products-table" id="vendors-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Tên nhà cung cấp</th>
-                    <th>Địa chỉ</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="PO-table-container">
+            <table class="PO-table" id="vendors-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên nhà cung cấp</th>
+                        <th>Địa chỉ</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

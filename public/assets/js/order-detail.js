@@ -509,6 +509,7 @@ $(function() {
                 order.status = "Đã xác nhận";
                 // khóa các ô input và bảng sản phẩm
                 $('#saveBtn, #addRow, #deleteRow, #confirmOrderBtn').prop('disabled', true);
+                $('#confirmOrderBtn').hide();
                 $('#PO-table input').prop('disabled', true);
                 $('#confirmStockBtn').show();
             } else {
@@ -581,7 +582,7 @@ $(function() {
      //logout
     $("#logout").click(function (e) {
         e.preventDefault();
-        window.location.href = "/login";
+        fetch('/logout').then(()=>window.location.href='/login');
     });
     
 });

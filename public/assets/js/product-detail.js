@@ -11,8 +11,8 @@ $(function(){
             .then(res => res.json())
             .then(result => {
                 if (result.success) {
-                    $("#item_CD").val(result.data.item_CD);
-                    $("#item_name").val(result.data.item_name);
+                    $("#item_CD").val(result.data.itemCode);
+                    $("#item_name").val(result.data.itemName);
                     $("#unit").val(result.data.unit);
                     $("#price").val(result.data.price);
                     $("#item_CD").prop("disabled", true);
@@ -22,12 +22,12 @@ $(function(){
 
     // Lưu sản phẩm
     $("#saveBtn").on("click", async function(){
-        const item_CD = $("#item_CD").val().trim();
-        const item_name = $("#item_name").val().trim();
+        const itemCode = $("#item_CD").val().trim();
+        const itemName = $("#item_name").val().trim();
         const unit = $("#unit").val().trim();
         const price = parseFloat($("#price").val()) || 0;
 
-        if(!item_CD || !item_name || !unit || !price){
+        if(!itemCode || !itemName || !unit || !price){
             alert("Vui lòng điền đầy đủ thông tin sản phẩm");
             return;
         }
@@ -36,11 +36,11 @@ $(function(){
         if (isEdit) {
             url = '/api/products/' + encodeURIComponent(productCode);
             method = 'PUT';
-            body = { item_name, unit, price };
+            body = { itemName, unit, price };
         } else {
             url = '/api/products';
             method = 'POST';
-            body = { item_CD, item_name, unit, price };
+            body = { itemCode, itemName, unit, price };
         }
 
         const res = await fetch(url, {
@@ -64,5 +64,5 @@ $(function(){
     $(".toggle-btn").click(function(){ $(".sidebar-wrap").slideToggle(300); });
     $(".user-btn").click(function(event){ event.stopPropagation(); $(".user-dropdown-content").toggle(); });
     $(document).click(function(){ $(".user-dropdown-content").hide(); });
-    $("#logout").click(function(e){ e.preventDefault(); window.location.href = "/login"; });
+    $("#logout").click(function(e){ e.preventDefault(); fetch('/logout').then(()=>window.location.href='/login'); });
 });

@@ -60,5 +60,5 @@ $(function(){
     $(".toggle-btn").click(function(){ $(".sidebar-wrap").slideToggle(300); });
     $(".user-btn").click(function(event){ event.stopPropagation(); $(".user-dropdown-content").toggle(); });
     $(document).click(function(){ $(".user-dropdown-content").hide(); });
-    $("#logout").click(function(e){ e.preventDefault(); window.location.href = "/login"; });
+    $("#logout").click(function(e){ e.preventDefault(); fetch('/logout').then(()=>window.location.href='/login'); });
 });
