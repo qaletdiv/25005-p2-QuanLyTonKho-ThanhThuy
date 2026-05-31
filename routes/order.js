@@ -11,6 +11,6 @@ router.put('/api/orders/:orderNo/confirm', isAuthenticated, hasRole('admin', 'nh
 router.put('/api/orders/:orderNo/stock', isAuthenticated, hasRole('admin', 'nhanvienkho'), orderController.confirmStock);
 
 router.get('/orders-list', isAuthenticated, orderController.renderOrdersList);
-router.get('/order-detail', isAuthenticated, orderController.renderOrderDetail);
+router.get('/order-detail', isAuthenticated, hasRole('admin', 'nhanvienmuahang'), orderController.renderOrderDetail);
 
 module.exports = router;

@@ -169,6 +169,20 @@ button {
     cursor:pointer;
 }
 
+#saveBtn {
+    background-color: #2471a3;
+}
+#saveBtn:hover {
+    background-color: #1a5276;
+}
+
+#backBtn {
+    background-color: #7f8c8d;
+}
+#backBtn:hover {
+    background-color: #5d6d7e;
+}
+
 /* button:hover {
     background-color:#2980b9;
 } */

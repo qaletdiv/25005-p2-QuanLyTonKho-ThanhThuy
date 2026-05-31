@@ -10,15 +10,6 @@ exports.getAllOrders = async (req, res) => {
             { model: OrderProduct, as: 'orderProducts' }
         ];
 
-        if (search) {
-            where = {
-                [Op.or]: [
-                    { orderNo: { [Op.like]: `%${search}%` } },
-                    { handler: { [Op.like]: `%${search}%` } }
-                ]
-            };
-        }
-
         const orders = await Order.findAll({ where, include: includeOpts });
 
         let data = orders.map(o => ({
@@ -30,12 +21,12 @@ exports.getAllOrders = async (req, res) => {
             status: o.status
         }));
 
-        // Lọc thêm theo vendorName nếu có search
         if (search) {
             const keyword = search.toLowerCase();
             data = data.filter(d =>
                 d.orderNo.toLowerCase().includes(keyword) ||
-                d.vendorName.toLowerCase().includes(keyword)
+                d.vendorName.toLowerCase().includes(keyword) ||
+                d.handler.toLowerCase().includes(keyword)
             );
         }
 
@@ -45,27 +36,6 @@ exports.getAllOrders = async (req, res) => {
         res.json({ success: false, message: 'Lỗi hệ thống' });
     }
 };
-
-// exports.getOrders = async (req, res) => {
-//     try {
-//         const { orderNo, vendorName } = req.query;
-//         let where = {};
-//         let include = [Vendor];
-//         if (orderNo) where.orderNo = orderNo;
-//         if (vendorName) {
-//             include = [{
-//                 model: Vendor,
-//                 as: 'vendor',
-//                 where: { vendorName: { [Op.like]: `%${vendorName}%` } }
-//             }];
-//         }
-//         const orders = await Order.findAll({ where, include });
-//         res.json({ success: true, data: orders });
-//     } catch (err) {
-//         res.json({ success: false, message: 'loi he thong' });
-//     }
-// };
-
 
 exports.getOrderDetail = async (req, res) => {
     try {
@@ -165,6 +135,10 @@ exports.updateOrder = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
         }
 
+        if (order.status !== 'Bản nháp') {
+            return res.status(400).json({ success: false, message: 'Chỉ có thể chỉnh sửa đơn hàng ở trạng thái Bản nháp' });
+        }
+
         const vendor = await Vendor.findOne({ where: { vendorName } });
         if (!vendor) {
             return res.status(400).json({ success: false, message: 'Nhà cung cấp không tồn tại' });
@@ -215,6 +189,10 @@ exports.confirmStock = async (req, res) => {
         const order = await Order.findOne({ where: { orderNo } });
         if (!order) {
             return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+        }
+
+        if (order.status !== 'Đã xác nhận') {
+            return res.status(400).json({ success: false, message: 'Chỉ có thể nhập kho đơn hàng ở trạng thái Đã xác nhận' });
         }
 
         const { Stock } = require('../models');

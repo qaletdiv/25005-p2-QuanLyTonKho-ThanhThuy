@@ -224,11 +224,10 @@ $(function() {
 
     // hàm kiểm tra ít nhất có 1 dòng trong bảng sản phẩm
     function hasOrderProducts (){
-        const products = table.rows().data().toArray();
-        if(products.length===0){
-            alert('vui lòng nhập ít nhất 1 sản phẩm');
+        const validProducts = getOrderProductsFromTable();
+        if(validProducts.length === 0){
+            alert('Vui lòng nhập ít nhất 1 sản phẩm.');
             throw new Error("không có sản phẩm nào");
-            
         }
     }
 
@@ -253,7 +252,8 @@ $(function() {
                 { itemCode: '', itemName: '', quantity: '', unitPrice: '' }
             ];
             render(blankRows, true);
-            $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').show();
+            $('#addRow,#deleteRow,#saveBtn').show();
+            $('#confirmOrderBtn,#confirmStockBtn').hide();
             return;
         }
         fetch(`/api/orders/${orderNo}`)
@@ -283,7 +283,11 @@ $(function() {
                 } else if (order.status === "Đã xác nhận") {
                     render(order.orderProducts, false);
                     $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').hide();
-                    $('#confirmStockBtn').show();
+                    if (USER_ROLE === 'admin' || USER_ROLE === 'nhanvienkho') {
+                        $('#confirmStockBtn').show();
+                    } else {
+                        $('#confirmStockBtn').hide();
+                    }
                     lockInputs();
                 } else if (order.status === "Đã nhập kho") {
                     render(order.orderProducts, false);
@@ -332,7 +336,8 @@ $(function() {
         ];
 
         render(blankRows,true);
-        $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').show();
+        $('#addRow,#deleteRow,#saveBtn').show();
+        $('#confirmOrderBtn,#confirmStockBtn').hide();
         const newUrl = window.location.pathname + "?mode=new";
         window.history.replaceState({}, '', newUrl);
     });
@@ -353,7 +358,8 @@ $(function() {
         ];
 
         render(blankRows,true);
-        $('#addRow,#deleteRow,#saveBtn,#confirmOrderBtn').show();
+        $('#addRow,#deleteRow,#saveBtn').show();
+        $('#confirmOrderBtn,#confirmStockBtn').hide();
     }
 
     
@@ -473,6 +479,9 @@ $(function() {
                 order = result.data;
                 const newUrl = window.location.pathname + `?orderNo=${order.orderNo}`;
                 window.history.replaceState({}, '', newUrl);
+                // Sau khi lưu: hiện nút Xác nhận đơn hàng, ẩn confirmStockBtn
+                $('#confirmOrderBtn').show();
+                $('#confirmStockBtn').hide();
             } else {
                 alert(result.message || 'Lỗi khi lưu đơn hàng');
             }
@@ -509,9 +518,11 @@ $(function() {
                 order.status = "Đã xác nhận";
                 // khóa các ô input và bảng sản phẩm
                 $('#saveBtn, #addRow, #deleteRow, #confirmOrderBtn').prop('disabled', true);
-                $('#confirmOrderBtn').hide();
+                $('#confirmOrderBtn, #saveBtn').hide();
                 $('#PO-table input').prop('disabled', true);
-                $('#confirmStockBtn').show();
+                if (USER_ROLE === 'admin' || USER_ROLE === 'nhanvienkho') {
+                    $('#confirmStockBtn').show();
+                }
             } else {
                 alert(result.message || 'Lỗi khi xác nhận đơn hàng');
             }
@@ -537,7 +548,8 @@ $(function() {
             if (response.ok) {
                 alert(`Đơn hàng ${order.orderNo} đã được nhập kho`);
                 $('#PO-table input').prop('disabled', true);
-                $('#addRow, #deleteRow, #saveBtn, #confirmStockBtn').hide();
+                $('#addRow,#deleteRow,#saveBtn,#confirmStockBtn,#confirmOrderBtn').hide();
+                lockInputs();
             } else {
                 alert(result.message || 'Lỗi khi nhập kho');
             }
