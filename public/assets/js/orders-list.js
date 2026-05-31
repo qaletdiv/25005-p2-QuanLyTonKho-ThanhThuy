@@ -12,7 +12,7 @@ $(function(){
                 { data: 'vendorName', title: 'Tên NCC' },
                 { data: 'orderDate', title: 'Ngày mua hàng' },
                 { data: 'handler', title: 'Nhân viên phụ trách' },
-                { data: 'totalAmount', title: 'Tổng tiền' },
+                { data: 'totalAmount', title: 'Tổng tiền', render: function(data){ return Number(data).toLocaleString('vi-VN'); } },
                 { data: 'status', title: 'Trạng thái' }
             ],
             columnDefs: [
@@ -69,7 +69,7 @@ $(function(){
 
     // Nút tạo mới
     $("#btn-create").on("click", function () {
-        window.open("/order-detail?mode=new", "_blank");
+        window.location.href = "/order-detail?mode=new";
     });
 
 

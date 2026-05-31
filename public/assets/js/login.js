@@ -1,11 +1,19 @@
 $(function(){
+    function showError(msg) {
+        $('#error-msg').text(msg).show();
+    }
+    function clearError() {
+        $('#error-msg').hide().text('');
+    }
+
     $(".login").on("submit", async function(event){
         event.preventDefault();
+        clearError();
 
         const userId = $("#user-id").val().trim();
         const userPassword = $("#user-password").val().trim();
         if(userId === '' || userPassword === ''){
-            alert('Vui lòng nhập User ID và Password');
+            showError('Vui lòng nhập User ID và Password');
             return;
         }
 
@@ -21,11 +29,11 @@ $(function(){
             if(data.success){
                 window.location.href = '/orders-list';
             } else {
-                alert(data.message);
+                showError(data.message);
             }
         } catch(err) {
             console.error(err);
-            alert('lỗi đăng nhập.');
+            showError('Lỗi kết nối, vui lòng thử lại.');
         }
     });
 });

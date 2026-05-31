@@ -528,14 +528,14 @@ $(function() {
             return;
         }
         try {
-            const response = await fetch(`/api/orders/${orderNo}/stock`, {
+            const response = await fetch(`/api/orders/${order.orderNo}/stock`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ products })
             });
             const result = await response.json();
             if (response.ok) {
-                alert(`Đơn hàng ${orderNo} đã được nhập kho`);
+                alert(`Đơn hàng ${order.orderNo} đã được nhập kho`);
                 $('#PO-table input').prop('disabled', true);
                 $('#addRow, #deleteRow, #saveBtn, #confirmStockBtn').hide();
             } else {

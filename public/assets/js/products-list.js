@@ -50,8 +50,8 @@ $(function(){
         if(e.which === 13) $("#btn-search").click();
     });
 
-    // Double click dòng mở chi tiết để sửa
-    $('#products-table').on('dblclick', 'tbody tr', function(){
+    // Click dòng mở chi tiết để sửa
+    $('#products-table').on('click', 'tbody tr', function(){
         let productCode = $(this).data('product-code');
         if (productCode) {
             window.location.href = '/product-detail?productCode=' + encodeURIComponent(productCode);

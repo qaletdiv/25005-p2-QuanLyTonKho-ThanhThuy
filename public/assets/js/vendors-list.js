@@ -48,8 +48,8 @@ $(function(){
         if(e.which === 13) $("#btn-search").click();
     });
 
-    // Double click dòng mở chi tiết để sửa
-    $('#vendors-table').on('dblclick', 'tbody tr', function(){
+    // Click dòng mở chi tiết để sửa
+    $('#vendors-table').on('click', 'tbody tr', function(){
         let vendorId = $(this).data('vendor-id');
         if (vendorId) {
             window.location.href = '/vendor-detail?vendorId=' + vendorId;
