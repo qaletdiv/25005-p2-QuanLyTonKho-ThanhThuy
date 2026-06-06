@@ -235,22 +235,18 @@ textarea.fld { height: 120px; resize: vertical; }
 .PO-table th:first-child,
 .PO-table td:first-child { width: 10px; }   
 .PO-table th:nth-child(2),
-.PO-table td:nth-child(2) { width: 10px; }  
+.PO-table td:nth-child(2) { width: 100px; }  
 .PO-table th:nth-child(3),
 .PO-table td:nth-child(3) { width: 100px; }  
 .PO-table th:nth-child(4),
-.PO-table td:nth-child(4) { width: 100px; }  
+.PO-table td:nth-child(4) { width: 80px; }   
 .PO-table th:nth-child(5),
-.PO-table td:nth-child(5) { width: 80px; }   
+.PO-table td:nth-child(5) { width: 100px; }  
 .PO-table th:nth-child(6),
-.PO-table td:nth-child(6) { width: 100px; }  
-.PO-table th:nth-child(7),
-.PO-table td:nth-child(7) { width: 100px; } 
+.PO-table td:nth-child(6) { width: 100px; } 
 
-.PO-table input[type="checkbox"] {
-    margin: 0;
-    padding: 0;
-    width: auto;       
+.PO-table tbody tr.selected-row {
+    background-color: #cce5ff !important;
 }
 
 .PO-table td input {

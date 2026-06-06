@@ -201,7 +201,7 @@ exports.confirmStock = async (req, res) => {
         for (const op of orderProducts) {
             let stock = await Stock.findOne({ where: { productId: op.productId } });
             if (stock) {
-                await stock.update({ quantity: stock.quantity + op.quantity });
+                await stock.update({ quantity: parseInt(stock.quantity) + parseInt(op.quantity) });
             } else {
                 await Stock.create({ productId: op.productId, quantity: op.quantity });
             }

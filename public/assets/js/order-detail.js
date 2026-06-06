@@ -30,7 +30,6 @@ $(function() {
         table = $('#PO-table').DataTable({
             data: data,
             columns: [
-                { data: null, title: '', defaultContent: '', className: "dt-center", render: function (data) { return editable ? `<input type="checkbox" class="row-check">` : ''; } },
                 { data: null, title: 'STT', className: "dt-center", render: function (data, type, row, meta) { return meta.row + 1; } },
                 { data: 'itemCode', title: 'Mã SP', className: "dt-center", render: function (data) { return editable ? `<input class='edit-input itemCode' value="${data || ''}">` : data; } },
                 { data: 'itemName', title: 'Tên SP', className: "dt-center", render: function (data) { return editable ? `<input class='edit-input itemName' value="${data || ''}">` : data; } },
@@ -56,14 +55,16 @@ $(function() {
             }
         });
         table.on('draw.dt', function () {
-            table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) { cell.innerHTML = i + 1 });
+            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) { cell.innerHTML = i + 1 });
         });
     }
 
      // lưu lại vị trí dòng mà user đang chỉnh sửa trong bảng order
-    let currentEditingRow =null;
-    $('#PO-table tbody').on('click','tr',function(){
-        currentEditingRow=$(this).closest('tr');
+    let currentEditingRow = null;
+    $('#PO-table tbody').on('click', 'tr', function(){
+        $('#PO-table tbody tr').removeClass('selected-row');
+        $(this).addClass('selected-row');
+        currentEditingRow = $(this);
     });
 
     searchTable = $('#searchProductTable').DataTable({
@@ -391,19 +392,14 @@ $(function() {
         updateOrderData();
     });
 
-    // Xóa dòng đã chọn
+    // Xóa dòng đang chọn 
     $('#deleteRow').on('click', function() {
-    let rowCheck = $('.row-check:checked');
-
-    if (rowCheck.length > 0) {
-        table.rows(rowCheck.closest('tr')).remove().draw();
-    } else {
-        let lastRow = table.row(':last');
-        if (lastRow.node()) {
-            lastRow.remove();
-            table.rows().draw(); 
+        if (!currentEditingRow) {
+            alert('Vui lòng click chọn dòng cần xóa.');
+            return;
         }
-    }
+        table.row(currentEditingRow).remove().draw();
+        currentEditingRow = null;
         updateTotalAmount();
         updateOrderData();
     });
